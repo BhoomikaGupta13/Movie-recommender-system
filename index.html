@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Recommendations</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        };
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="static/styles.css">
+    <style>
+        html, body {
+            height: 100%; 
+        }
+    </style>
+</head>
+<body class="bg-gray-100 h-screen flex flex-col font-sans">
+    <!-- Outer container, now acting as the main flex column for header and content -->
+    <div class="container mx-auto px-4 py-6 flex flex-col flex-1 overflow-hidden">
+        <header class="flex-shrink-0 flex flex-col md:flex-row justify-between items-center gap-4 mb-8 bg-white p-6 rounded-lg shadow">
+            <h1 class="text-3xl font-bold text-indigo-700">
+                <i class="fas fa-film mr-2"></i>Movie Recommendations
+            </h1>
+            <div class="flex flex-col sm:flex-row items-center gap-2 w-full md:w-auto relative">
+                <!-- Search Type Selection -->
+                <div class="flex items-center space-x-4 mb-2 md:mb-0 w-full sm:w-auto">
+                    <label class="inline-flex items-center">
+                        <input type="radio" name="search-type" value="movie_name" checked
+                               class="form-radio text-indigo-600 focus:ring-indigo-500 h-4 w-4">
+                        <span class="ml-2 text-gray-700">Movie Name</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input type="radio" name="search-type" value="genre"
+                               class="form-radio text-indigo-600 focus:ring-indigo-500 h-4 w-4">
+                        <span class="ml-2 text-gray-700">Genre</span>
+                    </label>
+                </div>
+
+                <!-- Input for Movie Name Search -->
+                <div id="movie-title-input-wrapper" class="flex flex-col w-full sm:w-64 relative">
+                    <input type="text" id="recommendation-movie-title" placeholder="Get similar movies for..."
+                           class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full">
+                    <div id="suggestions-dropdown" class="absolute top-full left-0 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg z-50 hidden max-h-60 overflow-y-auto"></div>
+                </div>
+
+                <!-- Dropdown for Genre Search (initially hidden) -->
+                <div id="genre-dropdown-wrapper" class="hidden w-full sm:w-64">
+                    <select id="genre-dropdown"
+                            class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full bg-white text-gray-700">
+                        <option value="">Select a genre</option>
+                    </select>
+                </div>
+
+                <button id="get-recommendations-button" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition w-full sm:w-auto">
+                    <i class="fas fa-magic mr-2"></i>Suggest
+                </button>
+            </div>
+        </header>
+
+        <!-- Main content area, now configured for independent scrolling sections -->
+        <main class="grid grid-cols-1 lg:grid-cols-2 gap-8 flex-1 overflow-hidden">
+            <!-- Left Section: All Movies -->
+            <!-- flex-1 makes it take available vertical space, overflow-y-auto makes its content scroll -->
+            <section class="bg-white p-6 rounded-lg shadow flex flex-col overflow-y-auto min-h-0">
+                <div class="flex justify-between items-center mb-4 flex-shrink-0">
+                    <h2 class="text-2xl font-semibold text-gray-800">
+                        <i class="fas fa-list mr-2"></i>All Movies
+                    </h2>
+                    <div class="relative">
+                        <input type="text" id="search-movies" placeholder="Search movies..."
+                               class="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+                <!-- This div is now just the grid container, its parent section handles scrolling -->
+                <div id="movies-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 pb-4 pr-2"></div>
+
+                <div class="flex justify-center mt-8 flex-shrink-0">
+                    <button id="see-more-movies-button"
+                            class="text-gray-800 hover:text-blue-600 transition-colors duration-300 hidden
+                                        flex items-center space-x-2 text-lg font-medium cursor-pointer">
+                        <span>See More</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Right Section: Similar Movies -->
+            <!-- flex-1 makes it take available vertical space, overflow-y-auto makes its content scroll -->
+            <section class="bg-white p-6 rounded-lg shadow flex flex-col overflow-y-auto min-h-0">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-4 flex-shrink-0">
+                    <i class="fas fa-star mr-2"></i>Similar Movies
+                </h2>
+                <!-- This div is now just the grid container, its parent section handles scrolling -->
+                <div id="recommendations-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 pb-4 pr-2">
+                    <div class="col-span-full text-center py-8 text-gray-500">
+                        <i class="fas fa-lightbulb text-3xl mb-2"></i>
+                        <p>Select 'Movie Name' and enter a title, or select 'Genre' to get recommendations.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="movie-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+        <div class="bg-white rounded-lg p-6 w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto relative">
+            <button class="close absolute top-3 right-3 text-2xl text-gray-600 hover:text-gray-900 focus:outline-none">&times;</button>
+            <div id="movie-details" class="mt-4">
+                <h3 class="text-xl font-bold text-gray-900 mb-2" id="modal-movie-title"></h3>
+                <p class="text-gray-700 mb-2"><strong>Year:</strong> <span id="modal-movie-year"></span></p>
+                <p class="text-gray-700 mb-2"><strong>Genre:</strong> <span id="modal-movie-genre"></span></p>
+                <p class="text-gray-700 mb-2"><strong>Duration:</strong> <span id="modal-movie-duration"></span> mins</p>
+                <p class="text-700 mb-2"><strong>Director:</strong> <span id="modal-movie-director"></span></p>
+                <p class="text-gray-700 mb-4"><strong>Overview:</strong> <span id="modal-movie-overview"></span></p>
+
+                <hr class="my-4">
+
+                <div class="mb-4">
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Your Rating:</h4>
+                    <div id="rating-stars" class="flex space-x-1 text-yellow-500 text-2xl cursor-pointer">
+                        <i class="far fa-star" data-rating="1"></i>
+                        <i class="far fa-star" data-rating="2"></i>
+                        <i class="far fa-star" data-rating="3"></i>
+                        <i class="far fa-star" data-rating="4"></i>
+                        <i class="far fa-star" data-rating="5"></i>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-1" id="current-user-rating-text"></p>
+                </div>
+
+                <div class="mb-4">
+                    <h4 class="text-lg font-semibold text-gray-800 mb-2">Average User Rating:</h4>
+                    <div id="average-rating-display" class="flex items-center">
+                        <span class="text-yellow-500 text-xl font-bold mr-2" id="avg-rating-value">N/A</span>
+                        <div id="avg-rating-stars" class="flex space-x-0.5 text-yellow-500">
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/app.js"></script>
+    <div id="global-loader" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50 hidden">
+        <div class="text-center">
+            <i class="fas fa-spinner fa-spin text-4xl text-indigo-600 mb-2"></i>
+            <p class="text-gray-700 text-lg">Loading...</p>
+        </div>
+    </div>
+</body>
+</html>

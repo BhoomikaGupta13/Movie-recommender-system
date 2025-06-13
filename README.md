@@ -1,13 +1,12 @@
-# Movie-recommender-system
 # Movie Recommender System
 
 ## Overview
 
-This project delivers a comprehensive, full-stack movie recommendation system designed to provide personalized movie suggestions. Leveraging data scraped from IMDb, the system utilizes a PostgreSQL database for robust storage and a FastAPI backend for efficient API communication. Frontend interactions are handled by a dynamic HTML, CSS (Tailwind CSS), and JavaScript interface, allowing users to browse movies, search, get recommendations based on movie titles or genres, and even rate movies. The current recommendation engine is built upon TF-IDF vectorization and Cosine Similarity to find highly relevant content based on movie attributes. User ratings are collected and stored but do not yet directly influence the recommendations.[1]
+This project delivers a comprehensive, full-stack movie recommendation system designed to provide personalized movie suggestions. Leveraging data scraped from IMDb, the system utilizes a PostgreSQL database for robust storage and a FastAPI backend for efficient API communication. Frontend interactions are handled by a dynamic HTML, CSS (Tailwind CSS), and JavaScript interface, allowing users to browse movies, search, get recommendations based on movie titles or genres, and even rate movies. The current recommendation engine is built upon TF-IDF vectorization and Cosine Similarity to find highly relevant content based on movie attributes. User ratings are collected and stored but do not yet directly influence the recommendations.
 
 ## Demo
 
-A video demonstration of the project in action will be uploaded soon, showcasing its features and responsiveness.[1]
+A video demonstration of the project is uploaded, showcasing its features and responsiveness.
 
 ## Features
 
@@ -74,7 +73,7 @@ A video demonstration of the project in action will be uploaded soon, showcasing
 
 ## Setup and Installation
 
-Follow these steps to set up and run the Movie Recommender System locally.[1]
+Follow these steps to set up and run the Movie Recommender System locally.
 
 ### Prerequisites
 
@@ -126,11 +125,11 @@ text
 c. **Configure Database Connection:**
 
 For Linux/macOS:
-export DATABASE_URL="postgresql://postgres:bhoomi%40123@localhost:5432/imdb_db1"
+export DATABASE_URL="your_url"
 
 text
 For Windows (Command Prompt):
-set DATABASE_URL="postgresql://postgres:bhoomi%40123@localhost:5432/imdb_db1"
+set DATABASE_URL="your_url"
 
 text
 *(Replace `postgres` and `bhoomi%40123` with your PostgreSQL username and password respectively if they are different, and adjust the database name if you chose a different one).*

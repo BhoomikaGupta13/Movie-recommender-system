@@ -36,8 +36,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-DATABASE_URL = os.environ.get("DATABASE_URL", "postgresql://postgres:bhoomi%40123@localhost:5432/imdb_db1")
+# Enter your connection string
+DATABASE_URL = os.environ.get("DATABASE_URL", "connection_string")
 
 def get_db_connection():
     """Establishes and returns a database connection using the DATABASE_URL."""

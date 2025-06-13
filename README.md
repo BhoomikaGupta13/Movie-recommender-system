@@ -19,7 +19,7 @@ A video demonstration of the project is uploaded, showcasing its features and re
 - **User Rating System:** Users can submit ratings for movies, and the system displays individual user ratings and average community ratings for each film.
 - **Robust Backend API:** A high-performance API developed using the FastAPI framework in Python, handling all data retrieval and recommendation logic.
 - **Persistent Data Storage:** Movie data, including details, genres, directors, description and user ratings, is securely stored and managed in a PostgreSQL database.
-- **Automated Data Scraping:** Includes a script to scrape and populate movie data from IMDb.[1]
+- **Automated Data Scraping:** Includes a script to scrape and populate movie data from IMDb.
 
 ## 🧰 Technologies Used
 
@@ -51,7 +51,7 @@ A video demonstration of the project is uploaded, showcasing its features and re
 - **Requests:** For making HTTP requests to fetch web content.
 - **Beautiful Soup:** For parsing HTML and XML documents to extract data from IMDb.
 - **Selenium:** For automating web browser interaction to scrape dynamic content from IMDb.
-- **Webdriver Manager (Chrome):** Simplifies the management and installation of browser drivers for Selenium.[1]
+- **Webdriver Manager (Chrome):** Simplifies the management and installation of browser drivers for Selenium.
 
 ## 🧱 Project Structure
 
@@ -60,7 +60,7 @@ A video demonstration of the project is uploaded, showcasing its features and re
 - **index.html:** The main HTML file for the web interface, integrating Tailwind CSS and linking app.js.
 - **styles.css:** Custom CSS for additional styling and overrides.
 - **data_scrapping.py:** Script to scrape movie details from IMDb using requests, BeautifulSoup, and Selenium, and then insert/update them into the PostgreSQL database.
-- **database.py:** Contains the MovieDatabase class for connecting to PostgreSQL, creating tables, and performing CRUD operations for movie and related data (genres, directors, actors), including user ratings.[1]
+- **database.py:** Contains the MovieDatabase class for connecting to PostgreSQL, creating tables, and performing CRUD operations for movie and related data (genres, directors, actors), including user ratings.
 
 ## 🔄 Data Pipeline
 
@@ -69,14 +69,14 @@ A video demonstration of the project is uploaded, showcasing its features and re
 - **Database Ingestion:** Cleaned data is inserted into a normalized PostgreSQL schema with tables for movies, genres, directors, actors, and ratings.
 - **Model Training:** On API startup, movies are loaded, and a TF-IDF matrix is built on combined features (genre, plot, director). Cosine similarity matrix is computed for recommendations.
 - **Serving:** FastAPI exposes endpoints for querying movies, searching, getting recommendations, and submitting/viewing ratings.
-- **Frontend Integration:** The HTML/CSS/JS frontend communicates with the API, displaying results and collecting user input.[1]
+- **Frontend Integration:** The HTML/CSS/JS frontend communicates with the API, displaying results and collecting user input.
 
 ## 🧠 Recommendation Model
 
 The core of the recommendation system currently uses a content-based filtering approach:
 
 - **TF-IDF Vectorization:** Movie features (plot summaries, genres, directors) are transformed into numerical TF-IDF vectors. This technique reflects the importance of a word in a document relative to a collection of documents.
-- **Cosine Similarity:** The similarity between movies is calculated using the cosine of the angle between their TF-IDF vectors. A higher cosine similarity score indicates greater similarity.[1]
+- **Cosine Similarity:** The similarity between movies is calculated using the cosine of the angle between their TF-IDF vectors. A higher cosine similarity score indicates greater similarity.
 
 
 ## 📡 API Endpoints

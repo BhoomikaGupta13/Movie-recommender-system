@@ -103,6 +103,5 @@ The FastAPI backend exposes the following key endpoints:
 
 
 ## 🎯 Conclusion
-This project stands as a fully functional prototype of a movie recommendation platform, bringing together advanced data handling, smart recommendation logic, and a sleek web interface. While it's not currently deployed for public use, it demonstrates the complete workflow—from scraping and storing data to serving intelligent recommendations. 🍿  
-Perfect as a foundation for future deployment, collaboration, or academic showcase. 🚀
+This project stands as a fully functional prototype of a movie recommendation platform, bringing together advanced data handling, smart recommendation logic, and a sleek web interface. While it's not currently deployed for public use, it demonstrates the complete workflow—from scraping and storing data to serving intelligent recommendations. 
 

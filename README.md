@@ -32,7 +32,7 @@ A video demonstration of the project is uploaded, showcasing its features and re
 
 ### ⚙️ Backend
 
-- **Python 3.x:** The primary programming language.
+- **Python:** The primary programming language.
 - **FastAPI:** A modern, fast (high-performance) web framework for building APIs with Python 3.7+.
 - **Pandas:** Data manipulation and analysis, especially for preparing movie data.
 - **Scikit-learn:** Used for TfidfVectorizer and cosine_similarity to build the recommendation model.

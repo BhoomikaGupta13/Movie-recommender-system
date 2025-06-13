@@ -1,0 +1,94 @@
+/* Custom scrollbar for modal */
+#movie-modal::-webkit-scrollbar {
+    width: 8px;
+}
+
+#movie-modal::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+#movie-modal::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+#movie-modal::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Smooth transitions */
+.movie-card, #movie-modal {
+    transition: all 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .movie-card img {
+        height: 36vw;
+    }
+}
+/* Movie card hover effect */
+.movie-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Modal transition */
+#movie-modal {
+    transition: opacity 0.3s ease;
+}
+
+/* Suggestions dropdown styling */
+#suggestions-dropdown {
+    scrollbar-width: thin;
+    scrollbar-color: #c7d2fe #f5f3ff;
+}
+
+#suggestions-dropdown::-webkit-scrollbar {
+    width: 8px;
+}
+
+#suggestions-dropdown::-webkit-scrollbar-track {
+    background: #f5f3ff;
+    border-radius: 0 0 8px 8px;
+}
+
+#suggestions-dropdown::-webkit-scrollbar-thumb {
+    background-color: #c7d2fe;
+    border-radius: 4px;
+}
+
+/* Loading spinner */
+.fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.star-rating {
+    display: inline-block;
+    font-size: 1.3rem;
+    cursor: pointer;
+    user-select: none;
+}
+.star {
+    color: #d1d5db;
+    transition: color 0.2s;
+    cursor: pointer;
+}
+.star.filled,
+.star.hovered {
+    color: #f59e42;
+}
+.user-rating-label {
+    margin-left: 0.5em;
+    font-size: 0.9em;
+    color: #6366f1;
+}
+.similarity {
+    font-size: 0.9em;
+    color: #2563eb;
+    margin-top: 0.3em;
+}

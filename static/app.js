@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let allGenres = []; 
     let currentOpenedMovieId = null; // To keep track of the movie in the modal for rating
 
-    const USER_ID = 1;
+    const USER_ID = 1; // Assuming a fixed user ID for now
 
     // --- Constants for movie loading ---
     const INITIAL_MOVIE_LIMIT = 100;
@@ -209,6 +209,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // --- Movie Details Modal ---
+    // Inside your app.js file
+
     async function openMovieModal(movie) {
         showLoader();
         try {
@@ -246,7 +248,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             <p class="text-sm text-gray-600 mt-1" id="current-user-rating-text">Click a star to rate this movie!</p>
                         </div>
 
-                        <!-- Average Rating section will be populated here -->
                         <div class="mb-4">
                             <h4 class="text-lg font-semibold text-gray-800 mb-2">Average User Rating:</h4>
                             <div id="average-rating-display" class="flex items-center">
@@ -260,13 +261,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>
             `;
 
-            const ratingStarsContainer = movieDetailsContainer.querySelector("#rating-stars");
-            if (ratingStarsContainer) {
-                ratingStarsContainer.addEventListener("click", handleStarRatingClick);
+            const avgRatingValueElement = movieDetailsContainer.querySelector("#avg-rating-value");
+            const avgRatingStarsContainer = movieDetailsContainer.querySelector("#avg-rating-stars");
+            if (avgRatingValueElement && avgRatingStarsContainer) {
+                if (typeof movie.rating === "number" && !isNaN(movie.rating)) {
+                    avgRatingValueElement.textContent = movie.rating.toFixed(1);
+                    displayStars(avgRatingStarsContainer, movie.rating);
+                } else {
+                    avgRatingValueElement.textContent = "N/A";
+                    avgRatingStarsContainer.innerHTML = '';
+                }
             }
 
+            // --- ADDED: Event listener for "Your Rating" stars ---
+            const ratingStarsContainer = movieDetailsContainer.querySelector("#rating-stars");
+            if (ratingStarsContainer) {
+                ratingStarsContainer.addEventListener('click', handleStarRatingClick);
+            }
+            // --- END ADDED ---
+
             await loadUserRating(movie.id);
-            await loadAverageRating(movie.id); // Load average rating when modal opens
 
             movieModal.classList.remove('hidden');
 
@@ -329,6 +343,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!avgRatingValueElement || !avgRatingStarsContainer) return;
 
         try {
+            // Updated endpoint to the correct one
             const response = await fetch(`${BASE_URL}/movies/${movieId}/average-rating`);
             const data = await response.json();
 
@@ -355,36 +370,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     function displayStars(container, rating) {
-        // Clear existing stars first to avoid duplicates when updating
-        container.innerHTML = '';
-
-        const fullStars = Math.floor(rating);
-        const halfStar = rating - fullStars >= 0.5;
-        const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-
-        // Add full stars
-        for (let i = 0; i < fullStars; i++) {
-            const star = document.createElement('i');
-            star.className = 'fas fa-star';
-            container.appendChild(star);
+    container.innerHTML = '';
+    for (let i = 1; i <= 5; i++) {
+        let className = 'far fa-star star';
+        if (i <= Math.floor(rating)) {
+            className = 'fas fa-star star';
+        } else if (i - rating <= 0.5 && rating % 1 !== 0) {
+            className = 'fas fa-star-half-alt star';
         }
-        // Add half star
-        if (halfStar) {
-            const star = document.createElement('i');
-            star.className = 'fas fa-star-half-alt';
-            container.appendChild(star);
-        }
-        // Add empty stars
-        for (let i = 0; i < emptyStars; i++) {
-            const star = document.createElement('i');
-            star.className = 'far fa-star';
-            container.appendChild(star);
-        }
+        const star = document.createElement('i');
+        star.className = className;
+        star.dataset.rating = i; // Always set for click
+        container.appendChild(star);
     }
+}
 
+
+
+    // Inside your handleStarRatingClick function in app.js
     async function handleStarRatingClick(event) {
-        const target = event.target.closest(".fa-star, .fa-star-half-alt"); // Capture both filled and half stars
-        if (!target) return;
+        // Correctly get the target and its data-rating
+        const target = event.target;
+        const clickedRating = target.dataset.rating; // Get the data-rating directly from the clicked <i> element
+
+        if (!clickedRating) return; // If no data-rating, do nothing
 
         if (currentOpenedMovieId === null) {
             console.error("No movie selected for rating.");
@@ -392,8 +401,15 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        const ratingClicked = parseFloat(target.dataset.rating);
-        const rating = ratingClicked; 
+        const rating = parseFloat(clickedRating); // Convert the string rating to a float
+
+        // Immediately update the visual stars for "Your Rating"
+        const starsContainer = movieDetailsContainer.querySelector("#rating-stars");
+        const userRatingTextElement = movieDetailsContainer.querySelector("#current-user-rating-text");
+        if (starsContainer && userRatingTextElement) {
+            displayStars(starsContainer, rating); // Visually fill the stars
+            userRatingTextElement.textContent = `You rated this ${rating.toFixed(1)} out of 5.`;
+        }
 
         showLoader();
         try {
@@ -417,20 +433,17 @@ document.addEventListener('DOMContentLoaded', function () {
             const result = await response.json();
             console.log("Rating submitted/updated:", result);
 
-            const starsContainer = movieDetailsContainer.querySelector("#rating-stars");
-            const userRatingTextElement = movieDetailsContainer.querySelector("#current-user-rating-text");
-            if (starsContainer && userRatingTextElement) {
-                displayStars(starsContainer, rating);
-                userRatingTextElement.textContent = `You rated this ${rating.toFixed(1)} out of 5.`;
-            }
-
-            // Reload average rating after user submits their rating
-            await loadAverageRating(currentOpenedMovieId);
+            // Removed: await loadAverageRating(currentOpenedMovieId);
+            // This prevents the average rating from updating immediately after a user's submission.
+            // The average rating will reflect what was loaded when the modal opened,
+            // or update upon subsequent modal re-opening.
 
         } catch (error) {
             console.error("Error submitting rating:", error);
-            // Replaced alert with console message for better UX
             console.log(`Error submitting rating: ${error.message}`);
+            // Optionally, revert the stars if the submission failed
+            // You might want to reload the user's previous rating here if submission fails
+            await loadUserRating(currentOpenedMovieId);
         } finally {
             hideLoader();
         }

@@ -418,7 +418,7 @@ if __name__ == "__main__":
         cleaned_df = clean_imdb_data(movies_df)
 
         # Ensure you use your correct database name and credentials here
-        db = MovieDatabase(dbname='imdb_db1', user='postgres', password='bhoomi@123', host='localhost', port='5432')
+        db = MovieDatabase(dbname='database_name', user='user_name', password='password', host='localhost', port='5432')
 
         print("\n--- Inserting data into PostgreSQL ---")
         inserted_count = 0

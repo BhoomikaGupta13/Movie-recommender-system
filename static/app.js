@@ -333,10 +333,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // --- REMOVED loadAverageRating function entirely as per requirements ---
-    // This function is no longer needed since the "Average User Rating" will
-    // only display the 'movie.rating' from the initial movie object when the
-    // modal is opened.
 
     function displayStars(container, rating) {
         // Clear existing stars first to avoid duplicates when updating
@@ -371,12 +367,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Ensure we're targeting the <i> element itself or a parent with data-rating
         let clickedRating = target.dataset.rating;
 
-        // If the click wasn't directly on an <i> with data-rating,
-        // it might be on the container. We need to find the specific star clicked.
         if (!clickedRating && target.parentNode.id === 'rating-stars') {
-            // This loop iterates through the children of the 'rating-stars' container
-            // to find which star was conceptually clicked.
-            // This is a common pattern when the click listener is on the parent.
             const stars = Array.from(target.parentNode.children);
             for (let i = 0; i < stars.length; i++) {
                 if (event.clientX < stars[i].getBoundingClientRect().right) {
@@ -448,7 +439,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         try {
             showLoader();
-            seeMoreMoviesButton.classList.add('hidden'); // Hide "See More" button during search results
+            seeMoreMoviesButton.classList.add('hidden'); 
             const response = await fetch(`${BASE_URL}/search?q=${encodeURIComponent(searchTerm)}`);
 
             const searchResult = await response.json();
